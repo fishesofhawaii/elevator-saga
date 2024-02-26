@@ -1,9 +1,18 @@
 {
     init: function(elevators, floors) {
-        // Do stuff with the elevators and floors, which are both arrays of objects
+
+        elevators.forEach(e => {
+            e.on("idle", function() {
+                e.goToFloor(e.currentFloor() - 1)
+            });
+    
+            e.on("floor_button_pressed", function(floorNum) { 
+                e.goToFloor(floorNum)
+            });
+    
+        });
     },
     update: function(dt, elevators, floors) {
-        // Do more stuff with the elevators and floors
-        // dt is the number of game seconds that passed since the last time update was called
+        // We normally don't need to do anything here
     }
 }
