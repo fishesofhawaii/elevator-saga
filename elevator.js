@@ -11,6 +11,9 @@
         const floorLights = {}
         const elevatorLights = {}
 
+        // const sources = []
+        // const destinations = []
+
         for (let i = 0; i < elevators.length; i++) {
             const e = elevators[i]
             
@@ -27,7 +30,7 @@
                 } // but only briefly -- fallthrough
 
                 if (e.currentFloor() == 0) {
-                    e.goToFloor(floors.length)
+                    e.goToFloor(floors.length - 1)
                     e.goingDownIndicator(false)
                 } else if (e.currentFloor() == floors.length - 1) {
                     // If on top, go to bottom and put up indicator
@@ -37,7 +40,10 @@
             });
 
             // Triggered when a passenger has pressed a button inside the elevator.	
-            e.on("floor_button_pressed", function(floorNum) { 
+            e.on("floor_button_pressed", function(floorNum) {
+                // sources.push(e.currentFloor())
+                // destinations.push(floorNum)
+                
                 if (elevatorLights[i] == undefined) {
                     elevatorLights[i] = new Map()
                 }
@@ -55,8 +61,8 @@
                 }
                                 
                 // If direction is matching, and there is room, let's pick em up
-                // LoadFactor isn't an exact measurement, .75 should pretty much be full (otherwise we might stop and cant fit them)
-                if (e.loadFactor() < 0.75) {
+                // LoadFactor isn't an exact measurement, should pretty much be full (otherwise we might stop and cant fit them)
+                if (e.loadFactor() < 0.72) {
                     if (direction == "up" && floorLights[floorNum]) {
                         e.goToFloor(floorNum, true)
                         floorLights[-floorNum] = true
@@ -64,8 +70,10 @@
                         e.goToFloor(floorNum, true)
                         floorLights[-floorNum] = false
                     } else {
-                        // if it's not... f'em (forget-em)
+
                     }
+                } else {
+                    // Just let the "Destination Queue Check" get us there
                 }
             });
 
