@@ -1,9 +1,10 @@
 # elevator-saga
 
-first-attempt Algorithm
-* Goes from top to bottom, storing button presses and floor presses globally
-* Elevators all go from bottom, to top, and stop at floors in line with the indicator (up/down)
-* I waste a lot of moves -- need to be more deterministic
+
+`npm run test`
+* elevator.js
+* floor.js
+
 
 Learnings (even if trivial)
 * Floor 0 can't go down
