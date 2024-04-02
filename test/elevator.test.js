@@ -1,9 +1,9 @@
-const elevator = require('../src/elevator.js');
+const elevator_util = require('../src/elevator-util.js');
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(elevator.sum(1, 2)).toBe(3);
+test('getHomeFloor returns maxFloor for odd value', () => {
+  expect(elevator_util.getHomeFloor(1, maxFloor = 10)).toBe(10)
 });
 
-test('sub 2 - 1 to equal 1', () => {
-    expect(elevator.sub(2, 1)).toBe(1);
+test('getHomeFloor returns 0 for even value', () => {
+  expect(elevator_util.getHomeFloor(2, maxFloor = 10)).toBe(0)
 });
