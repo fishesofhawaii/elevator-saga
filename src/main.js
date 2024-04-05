@@ -10,16 +10,46 @@
                 return index % 2 ? maxFloor : 0
             }
 
+            elevator.getOptimalQueue = function(queue, currentFloor) {
+                if (queue.length < 2) {
+                    return queue
+                }
+            
+                let goingUp = queue[0] > currentFloor
+                
+                let upwardFloors = queue.filter(f => f > currentFloor)
+                let downwardFloors = queue.filter(f => f < currentFloor)
+                let doesCurrentFloorExist = queue.indexOf(currentFloor) > -1
+            
+                if (goingUp) {
+                    const returnList = upwardFloors.sort().concat(downwardFloors.sort().reverse())
+                    if (doesCurrentFloorExist) {
+                        returnList.push(currentFloor)
+                    }
+                    return returnList
+                } else {
+                    const returnList = downwardFloors.sort().reverse().concat(upwardFloors)
+                    if (doesCurrentFloorExist) {
+                        returnList.push(currentFloor)
+                    }
+                    return returnList
+                    
+                }
+            }
+
+            elevators.getOptimalElevator = function(elevators, floorNum) {
+                return elevators[0]
+            }
+            
             // END elevator-util FUNCTIONS
             
             elevator.on("idle", function() {
+                elevator.goingUpIndicator(true)
+                elevator.goingDownIndicator(true)
+
                 let homeFloor = elevator.getHomeFloor(i, floors.length)
                 elevator.goToFloor(homeFloor)
 
-                if (elevator.currentFloor() == homeFloor) {
-                    elevator.goingUpIndicator(true)
-                    elevator.goingDownIndicator(true)
-                }
             })
 
             elevator.on("stopped_at_floor", function(floorNum) {
@@ -39,7 +69,13 @@
             })
 
             elevator.on("floor_button_pressed", function(floorNum) {
+                console.log("Dest Queue before gotofloor", elevator.destinationQueue)
                 elevator.goToFloor(floorNum)
+                console.log("Dest Queue AFTER gotofloor", elevator.destinationQueue)
+                elevator.destinationQueue = elevator.getOptimalQueue(elevator.destinationQueue, elevator.currentFloor)
+                elevator.checkDestinationQueue()
+                console.log("Dest Queue AFTER CHECK", elevator.destinationQueue)
+
             })
 
         }
@@ -52,11 +88,15 @@
             // END floor-util FUNCTIONS
 
             floor.on("up_button_pressed", function() {
-                
+                let floorNum = floor.floorNum()
+                let bestChoice = elevators.getOptimalElevator(elevators, floorNum)
+                bestChoice.goToFloor(floorNum)
             })
 
             floor.on("down_button_pressed", function() {
-
+                let floorNum = floor.floorNum()
+                let bestChoice = elevators.getOptimalElevator(elevators, floorNum)
+                bestChoice.goToFloor(floorNum)
             })
 
         }
